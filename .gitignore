@@ -11,6 +11,8 @@ __pycache__/
 venv/
 .venv/
 env/
+.coverage
+.coverage.*
 
 # --- IDE & OS ---
 .idea/
