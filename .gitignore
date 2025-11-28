@@ -1,0 +1,32 @@
+# --- SECRETS (Jamais sur Git !) ---
+.env
+.env.local
+api_keys.txt
+secrets/
+
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# --- IDE & OS ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- LOCAL DATA (Pour tes tests) ---
+# On ne veut pas push les PDF de test de 50Mo
+data/
+uploads/
+temp/
+output/
+*.log
+
+# --- ANTIGRAVITY / AI ---
+# Parfois les IDE créent des dossiers de cache, vérifie la doc
+.antigravity/cache/ 
+# (Mais garde les fichiers de config de l'IDE !)
