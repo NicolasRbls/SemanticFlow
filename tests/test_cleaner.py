@@ -3,24 +3,9 @@ from app.core.cleaner import recursive_cleaner
 
 def test_recursive_cleaner_nested_dict():
     data = {"a": {"b": "c"}}
-    expected = "a: b: c.." 
-    # Logic: outer dict key "a", value is dict. 
-    # Inner dict: key "b", value "c" -> "b: c."
-    # Outer dict: "a: " + "b: c." + "." -> "a: b: c.."
-    # Wait, let's re-read the implementation logic.
-    # parts.append(f"{key}: {cleaned_value}.")
-    # Inner: recursive_cleaner("c") -> "c"
-    # Inner dict loop: key="b", value="c" -> "b: c."
-    # Outer dict loop: key="a", value={"b": "c"} -> recursive_cleaner returns "b: c."
-    # Outer dict append: "a: b: c.."
-    
-    # Let's adjust the expectation or the code if ".." is not desired. 
-    # The prompt asked for "phrase lisible". "a: b: c.." is technically correct per my code but maybe ugly.
-    # However, I will stick to the implementation logic for the test to pass, or adjust implementation if I think it's wrong.
-    # The prompt example: `{"a": {"b": "c"}}` devient bien une phrase lisible.
-    # "a: b: c.." is readable enough.
-    
-    assert recursive_cleaner(data) == "a: b: c.."
+    # "a: b: c.."
+    expected = "a: b: c.."
+    assert recursive_cleaner(data) == expected
 
 def test_recursive_cleaner_list():
     data = ["hello", "world"]
@@ -38,6 +23,12 @@ def test_recursive_cleaner_markdown():
     expected = "Title bold and link"
     assert recursive_cleaner(data) == expected
 
+def test_recursive_cleaner_html():
+    data = "<div><p>Paragraph</p> <br> <span>Text</span></div>"
+    # Should remove tags and normalize whitespace
+    expected = "Paragraph Text"
+    assert recursive_cleaner(data) == expected
+
 def test_recursive_cleaner_complex_nested():
     data = {
         "section": {
@@ -45,9 +36,20 @@ def test_recursive_cleaner_complex_nested():
             "content": ["* Item 1", "> Quote"]
         }
     }
-    # Inner list: "Item 1 Quote" (assuming regex handles "* " and "> ")
+    # Inner list: "Item 1 Quote"
     # Inner dict: "header: Welcome. content: Item 1 Quote."
     # Outer dict: "section: header: Welcome. content: Item 1 Quote.."
     
     expected = "section: header: Welcome. content: Item 1 Quote.."
     assert recursive_cleaner(data) == expected
+
+def test_recursive_cleaner_code_blocks():
+    data = "Here is code: ```python print('hello') ``` end."
+    expected = "Here is code: python print('hello') end."
+    # Note: My regex `re.sub(r'`+', '', text)` just removes backticks, keeping content.
+    # This is often desired for "narrative" output unless we want to strip code entirely.
+    # The current implementation removes backticks.
+    assert recursive_cleaner(data) == expected
+
+def test_recursive_cleaner_none():
+    assert recursive_cleaner(None) == ""
